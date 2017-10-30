@@ -17,9 +17,9 @@ RUN apt-get install -y tmux
 # Add Xwindows configuration
 ADD .Xauthority /root/.Xauthority
 
-# startup script
-ADD startup.sh /startup.sh
-ADD startVNC.sh /startVNC.sh
+ADD scripts /scripts
+# ADD setVPN.sh /scripts/setVPN.sh
+# ADD startVNC.sh /scripts/startVNC.sh
 # RUN chmod 0755 /startup.sh
 
 # SSH server
@@ -36,5 +36,5 @@ ADD startVNC.sh /startVNC.sh
 
 # Expose VNC & websockify ports
 
-# ENTRYPOINT ["sh", "/startup.sh"]
+# CMD ["sh", "/scripts/startup.sh"]
 EXPOSE 5901 6080
