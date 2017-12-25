@@ -10,7 +10,6 @@ RUN apt-get install -y git python tightvncserver x11vnc xfce4  iceweasel-l10n-zh
 RUN git clone https://github.com/novnc/noVNC.git /root/noVNC
 RUN git clone https://github.com/novnc/websockify.git /root/noVNC/utils/websockify
 
-ADD nord /nord
 RUN apt-get install -y openvpn
 RUN apt-get install -y tmux
 
@@ -23,13 +22,13 @@ ADD scripts /scripts
 # RUN chmod 0755 /startup.sh
 
 # SSH server
-# RUN apt-get install -y openssh-server
-# RUN mkdir /var/run/sshd
-# RUN echo 'root:screencast' | chpasswd
-# RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN apt-get install -y openssh-server
+RUN mkdir /var/run/sshd
+RUN echo 'root:root' | chpasswd
+# RUN sed -ri 's/^PermitRootLogin\s+.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN sed -ri 's/UsePAM yes/#UsePAM yes/g' /etc/ssh/sshd_config
+RUN echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config
 
-# # SSH login fix. Otherwise user is kicked off after login
-# RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 # ENV NOTVISIBLE "in users profile"
 # RUN echo "export VISIBLE=now" >> /etc/profile
@@ -37,4 +36,5 @@ ADD scripts /scripts
 # Expose VNC & websockify ports
 
 # CMD ["sh", "/scripts/startup.sh"]
-EXPOSE 5901 6080
+EXPOSE 5901 6080 22
+
